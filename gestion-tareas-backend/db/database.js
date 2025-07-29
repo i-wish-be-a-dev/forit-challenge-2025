@@ -7,7 +7,7 @@ const db = new sqlite3.Database('./tasks.db', sqlite3.OPEN_READWRITE | sqlite3.O
      
     const createTableQuery = `CREATE TABLE IF NOT EXISTS tasks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                tittle TEXT,
+                title TEXT,
                 description TEXT,
                 completed BOOLEAN DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
