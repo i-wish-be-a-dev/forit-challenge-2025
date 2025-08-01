@@ -22,25 +22,25 @@ class TaskController {
 
     const { state } = req.params;
     const sql = `SELECT * FROM tasks WHERE completed = ?`;
-    db.all(sql, [state], (err, row) => {
+    db.all(sql, [state], (err, rows) => {
       if (err) {
         console.error('Error fetching task details:', err);
         return res.status(500).send({ error: 'Failed to fetch task details' });
       }
-      if (!row) {
+      if (!rows) {
         return res.status(404).send({ error: 'Task not found' });
       }
-      res.send({ task: row });
+      res.send({ task: rows });
     });
   }
 
 
 createTask(req, res) {
  
-  const sql = `INSERT INTO tasks (tittle,description) VALUES (?, ?)`
+  const sql = `INSERT INTO tasks (title,description) VALUES (?, ?)`
   db.run(
     sql,
-    [req.body.tittle, req.body.description],
+    [req.body.title, req.body.description],
     function (err) {
       if (err) {
         console.error('Error creating task:', err);
@@ -85,8 +85,8 @@ createTask(req, res) {
   }
 
 updateTask(req, res) {
-  const sql = `UPDATE tasks SET tittle = ?, description = ? WHERE id = ?`;
-  db.run(sql, [req.body.tittle, req.body.description, req.params.id], function(err) {
+  const sql = `UPDATE tasks SET title = ?, description = ? WHERE id = ?`;
+  db.run(sql, [req.body.title, req.body.description, req.params.id], function(err) {
     if (err) {
       console.error('Error updating task:', err);
       return res.status(500).send({ error: 'Failed to update task' });
