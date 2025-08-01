@@ -24,7 +24,7 @@ return (
           {location.pathname === "/tasks/new" || location.pathname.includes('/tasks/') ? (
             <button
               className="nav-link active btn btn-link"
-              style={{textDecoration: 'none'}}
+
               onClick={() => navigate("/")}
             >
               Go Back
@@ -32,7 +32,7 @@ return (
           ) : (
             <button
               className="nav-link active btn btn-link"
-              style={{textDecoration: 'none'}}
+
               onClick={() => navigate("/tasks/new")}
             >
               Create Task

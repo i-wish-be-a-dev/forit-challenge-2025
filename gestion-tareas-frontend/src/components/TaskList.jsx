@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import TaskSearch from './TaskSearch';
+import { useNavigate } from 'react-router-dom';
+import handleDelete from './handleDelete';
+import handleFinish from './HandleFinish';
 
 const TaskList = () => {
   const [filterState, setFilterState] = useState('all');
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadTasks();
@@ -59,28 +64,25 @@ const TaskList = () => {
         <button 
           className={`btn ${filterState === 'all' ? 'btn-primary' : 'btn-outline-primary'} me-2`}
           onClick={() => setFilterState("all")}
-       //   disabled={loading}
         >
-          Todos
+          Everything
         </button>
         <button 
           className={`btn ${filterState === 'completed' ? 'btn-success' : 'btn-outline-success'} me-2`}
           onClick={() => setFilterState("completed")}
-      //    disabled={loading}
         >
           Done
         </button>
         <button 
           className={`btn ${filterState === 'pending' ? 'btn-warning' : 'btn-outline-warning'}`}
           onClick={() => setFilterState("pending")}
-       //   disabled={loading}
         >
           Not Performed
         </button>
       </div>
 
       <div className="container mt-3">
-        <h2>Lista de Tareas</h2>
+        <h2>List  of Tasks</h2>
         
         {error && <div className="alert alert-danger">{error}</div>}
         
@@ -91,32 +93,42 @@ const TaskList = () => {
         )}
 
         {!error && tasks.length > 0 && (
-          <ul className="list-group">
-            {tasks.map(task => (
+          <TaskSearch
+            tasks={tasks}
+            renderTask={task => (
               <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
-                <div>
-                  <h5>{task.title}</h5>
-                  <p className="mb-0">{task.description}</p>
-                </div>
+              <div>
+                <h5 className="mb-1">{task.title}</h5>
+                <p className="mb-0 text-muted">{task.description}</p>
+              </div>
                 <span className={`badge ${task.completed ? 'bg-success' : 'bg-warning'}`}>
                   {task.completed ? 'Completed' : 'Pending'}
                 </span>
+                <button
+                  className="btn btn-outline-primary btn-sm me-2"
+                  onClick={() => navigate(`/tasks/${task.id}/edit`)}
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => HandleDelete(task.id, setTasks)}
+                  className="btn btn-outline-danger btn-sm"
+                >
+                  Delete
+                </button>
+               <button
+                  onClick={() => handleFinish(task.id)}
+                  className="btn btn btn-info btn-sm"
+                >
+                  Finish
+                </button>
 
-                                      <button 
-                      //  onClick={() => handleEdit(task)}
-                        className="btn btn-outline-primary btn-sm me-2"
-                      >
-                        Editar
-                      </button>
-                      <button 
-                      //  onClick={() => handleDelete(task.id)}
-                        className="btn btn-outline-danger btn-sm"
-                      >
-                        Eliminar
-                      </button>
+
+
+
               </li>
-            ))}
-          </ul>
+            )}
+          />
         )}
       </div>
     </>

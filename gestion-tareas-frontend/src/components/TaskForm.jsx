@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams,Navigate  } from 'react-router-dom';
 
 function refreshPage() {
   window.location.reload();
@@ -16,10 +17,22 @@ const TaskForm = () => {
       [e.target.name]: e.target.value,
     }));
   };
+const params = useParams();
 
-  const handleSubmit = async (e) => {
+  const navigate = useNavigate();
+ const [editing,setEditing] = useState(false);
+
+
+
+
+
+   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+
+
+if (!editing){
+
       const response = await fetch('http://localhost:3000/api/tasks', {
         method: 'POST',
         headers: {
@@ -27,6 +40,22 @@ const TaskForm = () => {
         },
         body: JSON.stringify(task),
       });
+}else {
+
+        console.log('Editing task:', task);
+
+      const response = await fetch(`http://localhost:3000/api/tasks/${params.id}`, {
+        method: 'PUT',
+        headers: {  
+
+'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+
+}
+
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -41,8 +70,32 @@ const TaskForm = () => {
 
   const handleSubmitAndRefresh = async (e) => {
     await handleSubmit(e);
-    refreshPage();
+    navigate('/');
   };
+
+  const fetchTask = async (id) => {
+        try {
+          const response = await fetch(`http://localhost:3000/api/tasks/${id}`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          console.log('Task fetched:', data);
+          setTask(data.task || data);
+          setEditing(true);
+        } catch (error) {
+          console.error('Error fetching task:', error);
+        }
+      };
+
+  useEffect(() => {
+
+    if(params.id) {
+      fetchTask(params.id);
+    }
+    
+    console.log(params);
+  },[params.id])
 
   return (
     <form onSubmit={handleSubmitAndRefresh} className="container mt-5">

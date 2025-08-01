@@ -14,8 +14,9 @@ function App() {
   <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<TaskList />} />
+        <Route path="/" element={<TaskList /> } />
         <Route path="/tasks/new" element={<TaskForm />} />
+        <Route path="/tasks/:id/edit" element={<TaskForm />} />
       </Routes>
     </BrowserRouter>
 
